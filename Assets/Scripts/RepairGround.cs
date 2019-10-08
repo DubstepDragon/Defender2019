@@ -27,7 +27,6 @@ public class RepairGround : MonoBehaviour
             
             if (Input.GetButtonDown("Action2"))
             {
-                print("heal");
                 for(int i = 0; i < underMe.Count - 1; i++)
                 {
                     

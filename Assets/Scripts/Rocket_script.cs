@@ -27,7 +27,7 @@ public class Rocket_script : MonoBehaviour
     public GameObject flame;
 
     public float damage = 1.0f;
-
+    private AudioSource rocAudio;
     bool pause = false;
     // Start is called before the first frame update
     void Start()
@@ -36,6 +36,7 @@ public class Rocket_script : MonoBehaviour
         rocketMesh = transform.GetChild(0).GetComponent<MeshRenderer>();
         capsule = GetComponent<CapsuleCollider>();
         sphere = GetComponent<SphereCollider>();
+        rocAudio = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -65,10 +66,11 @@ public class Rocket_script : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+
         if (other.gameObject.tag == "Base")
         {
             _base.GetComponent<Base_script>().Hit(damage);
-            Destroy(transform.gameObject);
+            Kill();
             
         }
         if (other.gameObject.tag == "Ground")
@@ -92,6 +94,7 @@ public class Rocket_script : MonoBehaviour
         if(other.gameObject.tag == "Arrow")
         {
             Kill();
+            SendMessageUpwards("SpawnCoinDest", transform.position);
             Destroy(other.gameObject);
         }
         
@@ -105,6 +108,7 @@ public class Rocket_script : MonoBehaviour
         flame.gameObject.SetActive(false);
         kill = true;
         rocketMesh.enabled = false;
+        rocAudio.Play();
         
     }
 

@@ -9,9 +9,11 @@ public class Rocket_spawner_script : MonoBehaviour
     public GameObject coin;
     public Ground_script Ground_spawner;
     public float Spawn_Timer = 2.0f;
+    public bool coinOnDestroy = false;
     private float Spawn_timer_max;
 
     bool pause = false;
+    
     [HideInInspector]
     
     // Start is called before the first frame update
@@ -37,9 +39,8 @@ public class Rocket_spawner_script : MonoBehaviour
                 if (!vox.is_targeted)
                 {
                     vox.is_targeted = true;
-                    SpawnRocket(vox.transform.position);
                     SpawnCoin();
-                    
+                    SpawnRocket(vox.transform.position);                                   
                 }
                 else
                 {
@@ -49,8 +50,8 @@ public class Rocket_spawner_script : MonoBehaviour
                         if (!vox.is_targeted)
                         {
                             vox.is_targeted = true;
-                            SpawnRocket(vox.transform.position);
                             SpawnCoin();
+                            SpawnRocket(vox.transform.position);                           
                             break;
                         }
                     }
@@ -90,10 +91,23 @@ public class Rocket_spawner_script : MonoBehaviour
 
     public void SpawnCoin()
     {
-        int temp = Random.Range(0, 4);
-        Vector3 pos = RandomCircle(transform.position, Random.Range(5, 25), Random.Range(0, 360));
-        GameObject new_inst = Instantiate(coin, pos, rocket.transform.rotation);
-        new_inst.transform.localScale = coin.transform.localScale;
-        new_inst.transform.parent = CoinParent.transform;
+        if (!coinOnDestroy)
+        {
+            int temp = Random.Range(0, 4);
+            Vector3 pos = RandomCircle(transform.position, Random.Range(5, 25), Random.Range(0, 360));
+            GameObject new_inst = Instantiate(coin, pos, rocket.transform.rotation);
+            new_inst.transform.localScale = coin.transform.localScale;
+            new_inst.transform.parent = CoinParent.transform;
+        }
+    }
+
+    public void SpawnCoinDest(Vector3 pos)
+    {
+        if (coinOnDestroy)
+        {
+            GameObject new_inst = Instantiate(coin, pos, rocket.transform.rotation);
+            new_inst.transform.localScale = coin.transform.localScale;
+            new_inst.transform.parent = CoinParent.transform;
+        }
     }
 }

@@ -11,10 +11,13 @@ public class PauseScript : MonoBehaviour
     public bool pauseTime = false;
     public GameObject pauseMenu;
 
+    public AudioSource bgMusic;
+    private float initVolLevel;
+
     // Start is called before the first frame update
     void Start()
     {
-        
+        initVolLevel = bgMusic.volume;
     }
 
     // Update is called once per frame
@@ -64,6 +67,7 @@ public class PauseScript : MonoBehaviour
 
     public void Pause()
     {
+        bgMusic.volume = 0.05f;
         pauseMenu.SetActive(true);
         Cursor.visible = true;
         Time.timeScale = 0.0f;
@@ -72,6 +76,7 @@ public class PauseScript : MonoBehaviour
 
     public void Resume()
     {
+        bgMusic.volume = initVolLevel;
         pauseMenu.SetActive(false);
         Cursor.visible = false;
         Time.timeScale = 1.0f;

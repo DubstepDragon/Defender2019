@@ -55,6 +55,14 @@ public class Arm_correction : MonoBehaviour
 
     }
 
+    public void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.tag == "Base")
+        {
+            gameObject.SendMessageUpwards("BaseModeExit", other.gameObject, SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
     public void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.tag == "Coin")

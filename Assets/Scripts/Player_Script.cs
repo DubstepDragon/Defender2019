@@ -21,6 +21,9 @@ public class Player_Script : MonoBehaviour
     public Camera mainCam;
     public Camera baseCam;
 
+    public GameObject _repair;
+    public GameObject _dismount;
+
     private Rigidbody armRB;
     private SkinnedMeshRenderer personMesh;
     
@@ -34,7 +37,7 @@ public class Player_Script : MonoBehaviour
     Vector3 input;
     Vector3 tempPlayerPos;
 
-
+    private bool _basemode = false;
 
     // Start is called before the first frame update
     void Start()
@@ -71,15 +74,13 @@ public class Player_Script : MonoBehaviour
             {
                 move_speed = MS;
             }
-            if (Input.GetButtonDown("Action"))
-            {
-                //secondary action?
-            }
+
         }
         else
         {
             if (Input.GetButtonDown("Action"))
             {
+                
                 Dismount();
             }
 
@@ -158,8 +159,7 @@ public class Player_Script : MonoBehaviour
 
         
         if (!camP)
-        {
-            
+        {            
             if (Mathf.Abs(Input.GetAxis("Horizontal")) > 0.1 ||
                 Mathf.Abs(Input.GetAxis("Vertical")) > 0.1)
             {
@@ -170,8 +170,9 @@ public class Player_Script : MonoBehaviour
                 setRunAnim(false);
             }
 
-            //transform.position += new Vector3(input.x, 0, input.y) * Time.deltaTime * move_speed;
-            transform.position += (CamF * input.y + CamR * input.x) * Time.deltaTime * move_speed;
+            if(!_basemode)
+                transform.position += (CamF * input.y + CamR * input.x) * Time.deltaTime * move_speed;
+
 
         }
         else
@@ -206,6 +207,7 @@ public class Player_Script : MonoBehaviour
     {
         if (!camP)
         {
+            _dismount.SetActive(true);
             lerpTime = 0.0f;
             armRB.useGravity = false;
             personMesh.enabled = false;
@@ -221,6 +223,7 @@ public class Player_Script : MonoBehaviour
     {
         if (camP)
         {
+            _basemode = false;
             Dismount_pos(tempPlayerPos);
         }
     }
@@ -229,6 +232,7 @@ public class Player_Script : MonoBehaviour
     {
         if (camP)
         {
+            _dismount.SetActive(false);
             CamPause();
             cam.GetComponent<thirdCam_Script>().ResetCamDist();
             transform.position = respawnPos;
@@ -255,6 +259,15 @@ public class Player_Script : MonoBehaviour
     public void BaseMode()
     {
         pauseMenu.pauseTime = true;
-        
+        _basemode = true;
+        _repair.SetActive(true);
+        _dismount.SetActive(true);
+    }
+
+    public void BaseModeExit()
+    {
+        _basemode = false;
+        _repair.SetActive(false);
+        _dismount.SetActive(false);
     }
 }

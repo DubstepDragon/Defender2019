@@ -4,18 +4,29 @@ using UnityEngine;
 
 public class CoinScript : MonoBehaviour
 {
+    private bool kill = false;
+    private float killTimer = 1.0f;
+    MeshRenderer mesh;
+    Collider coll;
+    private AudioSource cAudio;
     // Start is called before the first frame update
     void Start()
     {
-        
+        mesh = GetComponent<MeshRenderer>();
+        cAudio = GetComponent<AudioSource>();
+        coll = GetComponent<Collider>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(transform.position.y < -10)
+        if(transform.position.y < -10 || killTimer < 0)
         {
             Destroy(transform.gameObject);
+        }
+        if(kill)
+        {
+            killTimer -= Time.deltaTime;
         }
     }
 
@@ -23,8 +34,17 @@ public class CoinScript : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            Destroy(transform.gameObject);
+            Kill();
         }
+    }
+
+    public void Kill()
+    {
+        kill = true;
+        mesh.enabled = false;
+        coll.enabled = false;
+        cAudio.Play();
+
     }
 
 }
